@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1054140754761",
+    "project_id": "ecommerce-1698c",
+    "storage_bucket": "ecommerce-1698c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054140754761:android:4543d46de620beeadc4898",
+        "android_client_info": {
+          "package_name": "com.amandur.ecommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1054140754761-olbfvunvsjao68qcej2ddvt6q3uhsi5e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.amandur.ecommerce",
+            "certificate_hash": "a5920a6b12a7aaf0dbdec56f14afbcedca4015aa"
+          }
+        },
+        {
+          "client_id": "1054140754761-dg0rf3svmar54q6n5bc0q93dhv6bal1l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4h6Q73vuCvD3hfQyNCbUYqgLecVjC-m8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1054140754761-dg0rf3svmar54q6n5bc0q93dhv6bal1l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

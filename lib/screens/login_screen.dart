@@ -1,10 +1,12 @@
 import 'package:ecommerce/core/constants/colors.dart';
+import 'package:ecommerce/core/controllers/auth_controller.dart';
 import 'package:ecommerce/widgets/controls/custom_button.dart';
 import 'package:ecommerce/widgets/controls/custom_input.dart';
 import 'package:ecommerce/widgets/controls/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends GetWidget<AuthController> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -75,7 +77,9 @@ class LoginScreen extends StatelessWidget {
                   ),
                   CustomButton(
                       text: "Sign in wth Facebook",
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.signInWithFacebook();
+                      },
                       isSocial: true,
                       image: Image.asset(
                         "assets/icons/facebook_login.png",
@@ -85,7 +89,9 @@ class LoginScreen extends StatelessWidget {
                   ),
                   CustomButton(
                       text: "Sign in wth Google",
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.signInWithGoogle();
+                      },
                       isSocial: true,
                       image: Image.asset(
                         "assets/icons/google_login.png",
