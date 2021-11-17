@@ -1,9 +1,11 @@
 import 'package:ecommerce/core/constants/colors.dart';
 import 'package:ecommerce/core/controllers/auth_controller.dart';
+import 'package:ecommerce/screens/auth/register_screen.dart';
 import 'package:ecommerce/widgets/controls/custom_button.dart';
 import 'package:ecommerce/widgets/controls/custom_input.dart';
 import 'package:ecommerce/widgets/controls/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class LoginScreen extends GetWidget<AuthController> {
@@ -30,6 +32,10 @@ class LoginScreen extends GetWidget<AuthController> {
                         CustomText(
                           text: "Sign Up",
                           color: PRIMARY_COLOR,
+                          onTap: () {
+                            print('object');
+                            Get.to(RegisterScreen());
+                          },
                         ),
                       ]),
                   SizedBox(
