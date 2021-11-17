@@ -1,5 +1,8 @@
+import 'package:ecommerce/core/constants/colors.dart';
+import 'package:ecommerce/core/services/firestore_user.dart';
+import 'package:ecommerce/models/auth/user_model.dart';
 import 'package:ecommerce/screens/home_screen.dart';
-import 'package:ecommerce/screens/login_screen.dart';
+import 'package:ecommerce/screens/auth/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,9 +27,9 @@ class AuthController extends GetxController {
       idToken: googleAuth?.idToken,
     );
 
-    await FirebaseAuth.instance
-        .signInWithCredential(credential)
-        .then((value) => Get.offAll(HomeScreen()));
+    await FirebaseAuth.instance.signInWithCredential(credential).then((user) {
+      saveUser(user).then((value) => Get.offAll(() => HomeScreen()));
+    });
   }
 
   Future signInWithFacebook() async {
@@ -40,14 +43,18 @@ class AuthController extends GetxController {
     // Once signed in, return the UserCredential
     FirebaseAuth.instance
         .signInWithCredential(facebookAuthCredential)
-        .then((value) => Get.offAll(HomeScreen()));
+        .then((user) {
+      saveUser(user).then((value) => Get.offAll(() => HomeScreen()));
+    });
   }
 
   Future signinwithEmail() async {
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) => Get.offAll(HomeScreen()));
+          .then((value) {
+        Get.offAll(() => HomeScreen());
+      });
     } on FirebaseAuthException catch (e) {
       print(e);
 
@@ -68,13 +75,64 @@ class AuthController extends GetxController {
     }
   }
 
+  Future signUpWithEmailAndPassword() async {
+    try {
+      await _auth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((value) async {
+        saveUser(value).then((value) {
+          Get.offAll(() => HomeScreen());
+          Get.snackbar(
+            "Success",
+            "User Registered Successfully!",
+            icon: Icon(Icons.check, color: Colors.white),
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: PRIMARY_COLOR,
+            borderRadius: 20,
+            margin: EdgeInsets.all(15),
+            colorText: Colors.white,
+            duration: Duration(seconds: 4),
+            isDismissible: true,
+            dismissDirection: SnackDismissDirection.HORIZONTAL,
+            forwardAnimationCurve: Curves.easeOutBack,
+          );
+        });
+      });
+    } on FirebaseAuthException catch (e) {
+      print(e);
+
+      Get.snackbar(
+        "Error",
+        "Error happened during registration!",
+        icon: Icon(Icons.error, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        colorText: Colors.white,
+        duration: Duration(seconds: 4),
+        isDismissible: true,
+        dismissDirection: SnackDismissDirection.HORIZONTAL,
+        forwardAnimationCurve: Curves.easeOutBack,
+      );
+    }
+  }
+
   Future signOut() async {
     try {
       await _auth.signOut();
-      Get.offAll(LoginScreen());
+      Get.offAll(() => LoginScreen());
     } on FirebaseAuthException catch (e) {
       print(e);
     }
+  }
+
+  Future saveUser(UserCredential user) async {
+    await FireStoreUser().addUser(UserModel(
+        email: user.user!.email,
+        name: name.isEmpty ? user.user!.displayName : name,
+        userId: user.user!.uid,
+        pic: user.user!.photoURL));
   }
 
   @override
