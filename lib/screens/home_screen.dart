@@ -1,11 +1,11 @@
 import 'package:ecommerce/core/constants/colors.dart';
-import 'package:ecommerce/core/controllers/auth_controller.dart';
+import 'package:ecommerce/core/controllers/home_controller.dart';
 import 'package:ecommerce/widgets/controls/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
-class HomeScreen extends GetWidget<AuthController> {
+class HomeScreen extends GetWidget<HomeController> {
   var names = [
     "Men",
     "Women",
@@ -97,29 +97,32 @@ class HomeScreen extends GetWidget<AuthController> {
       child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
-            return Column(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50.0),
-                      color: Colors.grey.shade100),
-                  height: 60.0,
-                  width: 60.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      "assets/images/Icon_Mens Shoe.png",
+            return GestureDetector(
+              onTap: () {},
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50.0),
+                        color: Colors.grey.shade100),
+                    height: 60.0,
+                    width: 60.0,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        "assets/images/Icon_Mens Shoe.png",
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                CustomText(
-                  text: names[index],
-                  size: 14.0,
-                ),
-              ],
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  CustomText(
+                    text: names[index],
+                    size: 14.0,
+                  ),
+                ],
+              ),
             );
           },
           separatorBuilder: (context, index) {
@@ -190,55 +193,102 @@ class HomeScreen extends GetWidget<AuthController> {
   }
 
   _buttomNavigationBar() {
-    return BottomNavigationBar(
-      items: [
-        BottomNavigationBarItem(
-          activeIcon: Column(
-            children: [
-              CustomText(
-                text: 'Explore',
-                size: 14.0,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                alignment: Alignment.center,
-              ),
-              CustomText(
-                text: '.',
-                size: 20.0,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                alignment: Alignment.center,
-              ),
-            ],
-          ),
-          icon: Image.asset(
-            "assets/icons/Icon_Explore.png",
-            width: 20.0,
-            fit: BoxFit.contain,
-          ),
-          label: "",
-        ),
-        BottomNavigationBarItem(
-          activeIcon: Text('Cart'),
-          icon: Image.asset(
-            "assets/icons/Icon_Cart.png",
-            width: 20.0,
-            fit: BoxFit.contain,
-          ),
-          label: "",
-        ),
-        BottomNavigationBarItem(
-          activeIcon: Text('Account'),
-          icon: Image.asset(
-            "assets/icons/Icon_User.png",
-            width: 20.0,
-            fit: BoxFit.contain,
-          ),
-          label: "",
-        ),
-      ],
-      currentIndex: 0,
-      onTap: (index) {},
-    );
+    return GetBuilder<HomeController>(
+        init: HomeController(),
+        builder: (controller) => BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                  activeIcon: Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: Column(
+                      children: [
+                        CustomText(
+                          text: 'Explore',
+                          size: 14.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          alignment: Alignment.center,
+                        ),
+                        CustomText(
+                          text: '.',
+                          size: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          alignment: Alignment.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  icon: Image.asset(
+                    "assets/icons/Icon_Explore.png",
+                    width: 20.0,
+                    fit: BoxFit.contain,
+                  ),
+                  label: "",
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: Column(
+                      children: [
+                        CustomText(
+                          text: 'Cart',
+                          size: 14.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          alignment: Alignment.center,
+                        ),
+                        CustomText(
+                          text: '.',
+                          size: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          alignment: Alignment.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  icon: Image.asset(
+                    "assets/icons/Icon_Cart.png",
+                    width: 20.0,
+                    fit: BoxFit.contain,
+                  ),
+                  label: "",
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: Column(
+                      children: [
+                        CustomText(
+                          text: 'Account',
+                          size: 14.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          alignment: Alignment.center,
+                        ),
+                        CustomText(
+                          text: '.',
+                          size: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          alignment: Alignment.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  icon: Image.asset(
+                    "assets/icons/Icon_User.png",
+                    width: 20.0,
+                    fit: BoxFit.contain,
+                  ),
+                  label: "",
+                ),
+              ],
+              currentIndex: controller.navigatorValue,
+              onTap: (index) {
+                controller.setNavigatorValue(index);
+              },
+            ));
   }
 }
