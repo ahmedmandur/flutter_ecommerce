@@ -7,6 +7,7 @@ import 'package:ecommerce/models/products/product_model.dart';
 import 'package:ecommerce/widgets/controls/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 class HomeScreen extends GetWidget<ControlController> {
@@ -23,7 +24,7 @@ class HomeScreen extends GetWidget<ControlController> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(
-      init: HomeController(),
+      init: Get.put(HomeController()),
       builder: (controller) => controller.isLoading.value
           ? Center(
               child: CircularProgressIndicator(
