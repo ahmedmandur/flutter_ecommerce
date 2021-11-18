@@ -1,11 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/core/constants/colors.dart';
+import 'package:ecommerce/core/controllers/control_controller.dart';
 import 'package:ecommerce/core/controllers/home_controller.dart';
+import 'package:ecommerce/models/products/category_model.dart';
+import 'package:ecommerce/models/products/product_model.dart';
 import 'package:ecommerce/widgets/controls/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
-class HomeScreen extends GetWidget<HomeController> {
+class HomeScreen extends GetWidget<ControlController> {
   var names = [
     "Men",
     "Women",
@@ -18,58 +22,66 @@ class HomeScreen extends GetWidget<HomeController> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: _buttomNavigationBar(),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsetsDirectional.only(
-              top: 70.0,
-              bottom: 30.0,
-              start: 20.0,
-              end: 20.0,
-            ),
-            child: Column(
-              children: [
-                _searchBarWidget(),
-                SizedBox(
-                  height: 40.0,
-                ),
-                CustomText(
-                  text: "Categories",
-                  size: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                _categoriesListview(),
-                SizedBox(
-                  height: 60.0,
-                ),
-                Row(
-                  children: [
-                    CustomText(
-                      text: "Best Selling",
-                      size: 18.0,
-                      fontWeight: FontWeight.bold,
+    return GetBuilder<HomeController>(
+      init: HomeController(),
+      builder: (controller) => controller.isLoading.value
+          ? Center(
+              child: CircularProgressIndicator(
+              strokeWidth: 2.0,
+              color: PRIMARY_COLOR,
+            ))
+          : Scaffold(
+              body: Container(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsetsDirectional.only(
+                      top: 70.0,
+                      bottom: 30.0,
+                      start: 20.0,
+                      end: 20.0,
                     ),
-                    Spacer(),
-                    CustomText(
-                      text: "See All",
-                      size: 16.0,
+                    child: Column(
+                      children: [
+                        _searchBarWidget(),
+                        SizedBox(
+                          height: 40.0,
+                        ),
+                        CustomText(
+                          text: "Categories",
+                          size: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _categoriesListview(controller.categories),
+                        SizedBox(
+                          height: 60.0,
+                        ),
+                        Row(
+                          children: [
+                            CustomText(
+                              text: "Best Selling",
+                              size: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            Spacer(),
+                            CustomText(
+                              text: "See All",
+                              size: 16.0,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _productsListview(controller.products)
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                _productsListview()
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -91,7 +103,7 @@ class HomeScreen extends GetWidget<HomeController> {
     );
   }
 
-  _categoriesListview() {
+  _categoriesListview(List<CategoryModel> categories) {
     return Container(
       height: 100.0,
       child: ListView.separated(
@@ -108,17 +120,18 @@ class HomeScreen extends GetWidget<HomeController> {
                     height: 60.0,
                     width: 60.0,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset(
-                        "assets/images/Icon_Mens Shoe.png",
-                      ),
-                    ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: CachedNetworkImage(
+                          imageUrl: categories[index].image!,
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        )),
                   ),
                   SizedBox(
                     height: 20.0,
                   ),
                   CustomText(
-                    text: names[index],
+                    text: categories[index].name!,
                     size: 14.0,
                   ),
                 ],
@@ -130,11 +143,11 @@ class HomeScreen extends GetWidget<HomeController> {
               width: 20.0,
             );
           },
-          itemCount: names.length),
+          itemCount: categories.length),
     );
   }
 
-  _productsListview() {
+  _productsListview(List<ProductModel> products) {
     return Container(
       height: 350.0,
       child: ListView.separated(
@@ -150,15 +163,16 @@ class HomeScreen extends GetWidget<HomeController> {
                       Container(
                         height: 220.0,
                         width: MediaQuery.of(context).size.width * 0.4,
-                        child: Image.asset(
-                          "assets/images/product_image.png",
-                          fit: BoxFit.fill,
-                        ),
+                        child: CachedNetworkImage(
+                            imageUrl: products[index].image,
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.fill),
                       ),
                     ],
                   )),
                   CustomText(
-                    text: 'BeoPlay Speaker',
+                    text: products[index].name,
                     size: 16.0,
                     alignment: Alignment.bottomLeft,
                   ),
@@ -166,15 +180,16 @@ class HomeScreen extends GetWidget<HomeController> {
                     height: 5.0,
                   ),
                   CustomText(
-                    text: 'Bang and Olufsen',
+                    text: products[index].brand,
                     size: 12.0,
+                    color: Colors.grey,
                     alignment: Alignment.bottomLeft,
                   ),
                   SizedBox(
                     height: 5.0,
                   ),
                   CustomText(
-                    text: '\$755',
+                    text: '\$${products[index].price}',
                     size: 16.0,
                     alignment: Alignment.bottomLeft,
                     color: PRIMARY_COLOR,
@@ -188,107 +203,7 @@ class HomeScreen extends GetWidget<HomeController> {
               width: 20.0,
             );
           },
-          itemCount: names.length),
+          itemCount: products.length),
     );
-  }
-
-  _buttomNavigationBar() {
-    return GetBuilder<HomeController>(
-        init: HomeController(),
-        builder: (controller) => BottomNavigationBar(
-              items: [
-                BottomNavigationBarItem(
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: Column(
-                      children: [
-                        CustomText(
-                          text: 'Explore',
-                          size: 14.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          alignment: Alignment.center,
-                        ),
-                        CustomText(
-                          text: '.',
-                          size: 20.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          alignment: Alignment.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  icon: Image.asset(
-                    "assets/icons/Icon_Explore.png",
-                    width: 20.0,
-                    fit: BoxFit.contain,
-                  ),
-                  label: "",
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: Column(
-                      children: [
-                        CustomText(
-                          text: 'Cart',
-                          size: 14.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          alignment: Alignment.center,
-                        ),
-                        CustomText(
-                          text: '.',
-                          size: 20.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          alignment: Alignment.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  icon: Image.asset(
-                    "assets/icons/Icon_Cart.png",
-                    width: 20.0,
-                    fit: BoxFit.contain,
-                  ),
-                  label: "",
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
-                    child: Column(
-                      children: [
-                        CustomText(
-                          text: 'Account',
-                          size: 14.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          alignment: Alignment.center,
-                        ),
-                        CustomText(
-                          text: '.',
-                          size: 20.0,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          alignment: Alignment.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  icon: Image.asset(
-                    "assets/icons/Icon_User.png",
-                    width: 20.0,
-                    fit: BoxFit.contain,
-                  ),
-                  label: "",
-                ),
-              ],
-              currentIndex: controller.navigatorValue,
-              onTap: (index) {
-                controller.setNavigatorValue(index);
-              },
-            ));
   }
 }
